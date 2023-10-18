@@ -4,7 +4,7 @@ WITH
 
 sales AS (SELECT * FROM {{ ref('stg_sales') }} )
 
-  ,product AS (SELECT * FROM `gz_raw_data.raw_gz_product`)
+  ,product AS (SELECT * FROM  {{ref('stg_product')}})
 
 SELECT
   s.date_date
@@ -18,13 +18,13 @@ SELECT
   ,s.turnover
   -- cost --
   ,p.purchase_price
-	,ROUND(s.qty*CAST(p.purchase_price AS FLOAT64),2) AS purchase_cost
+	,ROUND(s.qty*p.purchase_price ,2) AS purchase_cost
 	-- margin --
 	,
-    ROUND(s.turnover- ROUND(s.qty*CAST(p.purchase_price AS FLOAT64),2),2)
+    ROUND(s.turnover- ROUND(s.qty*p.purchase_price,2),2)
  AS product_margin
     ,
-   ROUND( SAFE_DIVIDE( (s.turnover - s.qty*CAST(p.purchase_price AS FLOAT64)) , s.turnover ) , 2)
+   ROUND( SAFE_DIVIDE( (s.turnover - s.qty*p.purchase_price ) , s.turnover ) , 2)
  As product_margin_percent
 FROM sales s
-INNER JOIN {{ref('stg_product')}} p ON s.products_id = p.products_id
+INNER JOIN product p ON s.products_id = p.products_id
