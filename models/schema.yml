@@ -34,3 +34,9 @@ models:
 
           - name: margin
             description : the product margin. Subtraction of the turnover and the purchase_cost
+
+    - name: orders
+      description : One line by orders_id 
+      tests:
+        - unique:
+            column_name: "(orders_id || '-' || date_date)"
