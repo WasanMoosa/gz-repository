@@ -40,3 +40,9 @@ models:
       tests:
         - unique:
             column_name: "(orders_id || '-' || date_date)"
+
+    - name: int_campaign
+      description : ads for all campaigns
+      tests:
+        - unique:
+            column_name: "(campaign_key || '-' || date_date)"
